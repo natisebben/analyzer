@@ -29,6 +29,10 @@ namespace Common
 		[Description("Floating Point Constant")]
 		FLOATINGPOINTCONSTANT,
 
+		[Display(Name = "Char Constant")]
+		[Description("Char Constant")]
+		CHARCONSTANT,
+
 		[Display(Name = "+")]
 		[Description("Plus")]
 		PLUS,
@@ -286,11 +290,15 @@ namespace Common
 		XOR,
 
 		[Display(Name = "true")]
-		[Description("true")]
+		[Description("True")]
 		TRUE,
 
 		[Display(Name = "false")]
-		[Description("false")]
-		FALSE
+		[Description("False")]
+		FALSE,
+
+		[Display(Name = "'")]
+		[Description("Simple Quote")]
+		SIMPLEQUOTE
 	}
 }

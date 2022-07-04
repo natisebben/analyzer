@@ -70,6 +70,7 @@ namespace Analyzer
         private Result CheckInitialSymbolToken(LexicalAnalyzerState state)
         {
             if (state.CurrentChar == ' ' || 
+                state.CurrentChar == '\0' ||
                 state.CurrentChar == '\t' || 
                 state.CurrentChar == '\n')
             {
@@ -77,7 +78,8 @@ namespace Analyzer
                 return default;
             }
             else if (char.IsLetter(state.CurrentChar) ||
-                     state.CurrentChar == '_')
+                     state.CurrentChar == '_' ||
+                     state.CurrentChar == '\'')
             {
                 state.DefineTokenType(TokenType.Word);
                 return default;
@@ -188,6 +190,39 @@ namespace Analyzer
                 char.IsDigit(state.CurrentChar))
             {
                 return default;
+            }
+            if(state.CurrentToken.First() == '\'' &&
+               state.CurrentToken.Last() != '\'')
+            {
+                return default;
+            }
+            else if(state.CurrentToken.Length == 3 &&
+                    state.CurrentToken.First().ToString().Equals("'") &&
+                    state.CurrentToken.Last().ToString().Equals("'") &&
+                    char.TryParse(state.CurrentToken.ElementAt(1).ToString(), out _))
+            {
+                state.ReadNextChar();
+
+                if (state.CurrentChar != '\'')
+                {
+                    state.UnreadLastChar();
+                }
+                return GetTokenResult(state, Token.CHARCONSTANT);
+
+                state.UnreadLastChar();
+            }
+            else if(state.CurrentToken.Length == 4 &&
+                    state.CurrentToken.ElementAt(1).ToString().Equals(@"\") &&
+                    state.CurrentToken.First().ToString().Equals("'") &&
+                    state.CurrentToken.Last().ToString().Equals("'") &&
+                    char.TryParse(state.CurrentToken.ElementAt(2).ToString(), out _))
+            {
+                if (state.CurrentToken != "'\\n'" &&
+                    state.CurrentToken != "'\\t'")
+                {
+                    state.CleanScapeBar();
+                }
+                return GetTokenResult(state, Token.CHARCONSTANT);
             }
             else
             {

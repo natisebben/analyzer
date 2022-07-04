@@ -57,6 +57,7 @@ namespace Analyzer
         {
             CurrentToken = string.Empty;
             CurrentChar = default;
+            CurrentTokenType = TokenType.InitialSymbol;
         }
 
         public void WriteTokenResult(Result result, bool closeFiles = false)
@@ -83,6 +84,11 @@ namespace Analyzer
         public void TokenNumberWithPoint(bool hasPoint)
         {
             HasPoint = hasPoint;
+        }
+
+        public void CleanScapeBar()
+        {
+            CurrentToken = $"{CurrentToken.First()}{CurrentToken.ElementAt(2)}{CurrentToken.Last()}";
         }
     }
 }
